@@ -113,23 +113,4 @@ elif city == 'jaunpur':
 elif city == 'england':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
     st.image('london, uk, england.PNG',width= 950)
-
-    # maxTemp = [42,42,41,36,45,39,32]
-    # day = [22,23,24,25,26,27,28]
-    # minTemp = [34,23,31,33,29,30,28]
-
-    # plt.ylabel("Max Temperature🌡 in °C")
-    # plt.xlabel("Days of April")
-    # plt.plot(day, maxTemp)
-    # plt.show()
-
-    # plt.ylabel("Min Temperature🌡 in °C")
-    # plt.xlabel("Days of April")
-    # plt.plot(day, minTemp)
-    # plt.show()
-
-
-
-
-
     
