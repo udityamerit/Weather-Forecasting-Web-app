@@ -24,19 +24,20 @@ df = pd.read_csv('Weather forecast data 1.csv')
 df1 = pd.read_csv('Weather forecast data set 2.csv')
 
 
-st.header('Data set 1:')
-st.dataframe(df)
-st.header('Data set 2:')
-st.dataframe(df1)
+# st.header('Data set 1:')
+# st.dataframe(df)
+# st.header('Data set 2:')
+# st.dataframe(df1)
 
-# moscow = []
-x = list(df['name'])
-a = x[0:10]
-st.write(a)
+# Get the particular data form the specific countery and city 
 
-y = list(df['temp'])
-b = y[0:10]
-st.write(b)
+# x = list(df['name'])
+# a = x[0:10]
+# st.write(a)
+
+# y = list(df['temp'])
+# b = y[0:10]
+# st.write(b)
 
 def get_weather(city):
     api_key = "3f4f458fc6d5cb3440d24074d29f7e82"
@@ -113,4 +114,16 @@ elif city == 'jaunpur':
 elif city == 'england':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
     st.image('london, uk, england.PNG',width= 950)
+
+elif city == 'moscow':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.write(df.head(9))
+    st.bar_chart(df[['tempmax','tempmin']].head(9))
+
+    #pyplot chart
+    corr = df.corr(df[['tempmax','tempmin']].corr)
+    st.write(corr)
+    fig, ax = plt.subplot()
+    sns.heatmap(corr)
+    st.pyplot(fig)
     
