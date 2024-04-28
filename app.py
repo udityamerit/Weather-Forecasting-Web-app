@@ -8,8 +8,7 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 
-
-
+# if you want to  create a cell like jupyter notbook then type   the ( # %% ) for the cell '''
 
 
 # Set page configuration
@@ -94,36 +93,58 @@ data = pd.DataFrame( np.random.randn(14,3),columns = ['Temperature','Humidity','
 if city == 'mumbai':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
     st.image('mumbai.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[19.082],
+                        'lon':[72.8789]})
+
+    st.map(df2, size=200, color='#0044ff')
 
 elif city == 'bhopal':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('bhopal data 2 week.PNG',width= 950)
+    st.image('bhopal data 2 week.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[23.264],
+                        'lon':[77.402]})
+
+    st.map(df2, size=200, color='#FF5733')
 
 elif city == 'tokyo':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('tokyo japan.PNG',width= 950)
+    st.image('tokyo japan.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[35.6764],
+                        'lon':[139.650]})
+
+    st.map(df2, size=200, color='#FF5733')
 
 elif city == 'london':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('london, uk, england.PNG',width= 950)
+    st.image('london, uk, england.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
 
 elif city == 'jaunpur':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('jaunpur data 2 week.PNG',width= 950)
+    st.image('jaunpur data 2 week.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[25.744],
+                        'lon':[82.6837]})
+
+    st.map(df2, size=200, color='#0044ff')
 
 elif city == 'england':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('london, uk, england.PNG',width= 950)
+    st.image('london, uk, england.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[52.3555],
+                        'lon':[1.1743]})
+
+    st.map(df2, size=200, color='#0044ff')
 
 elif city == 'moscow':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
     st.write(df.head(9))
-    st.bar_chart(df[['tempmax','tempmin']].head(9))
+    st.area_chart(df[['tempmax','tempmin']].head(9))
+    df2 = pd.DataFrame({'lat':[55.755],
+                        'lon':[37.617]})
 
-    #pyplot chart
-    corr = df.corr(df[['tempmax','tempmin']].corr)
-    st.write(corr)
-    fig, ax = plt.subplot()
-    sns.heatmap(corr)
-    st.pyplot(fig)
-    
+    st.map(df2, size=200, color='#0044ff')
+
+   
