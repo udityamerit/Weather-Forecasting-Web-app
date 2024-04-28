@@ -100,7 +100,7 @@ if city == 'mumbai':
 
 elif city == 'bhopal':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('bhopal data 2 week.PNG',width= 1400)
+    st.image('bhopal.png',width= 1400)
     df2 = pd.DataFrame({'lat':[23.264],
                         'lon':[77.402]})
 
@@ -122,9 +122,46 @@ elif city == 'london':
 
     st.map(df2, size=200, color='#FF5733')
 
+elif city == 'fatehpur':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('fatehpur.png',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
+    
+elif city == 'kanpur':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('kanpurr.png',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
+elif city == 'allahabad':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('prayag.png',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
+elif city == 'sehore':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('sehore.png',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
+elif city == 'usa':
+    st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('usa.png',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51279],
+                        'lon':[-0.09184]})
+
+    st.map(df2, size=200, color='#FF5733')
+
 elif city == 'jaunpur':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('jaunpur data 2 week.PNG',width= 1400)
+    st.image('jaunpur.png',width= 1400)
     df2 = pd.DataFrame({'lat':[25.744],
                         'lon':[82.6837]})
 
@@ -132,7 +169,7 @@ elif city == 'jaunpur':
 
 elif city == 'england':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('london, uk, england.PNG',width= 1400)
+    st.image('england.png',width= 1400)
     df2 = pd.DataFrame({'lat':[52.3555],
                         'lon':[1.1743]})
 
@@ -140,6 +177,7 @@ elif city == 'england':
 
 elif city == 'moscow':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
+    st.image('russia.png', width=1400)
     st.write(df.head(9))
     st.area_chart(df[['tempmax','tempmin']].head(9))
     df2 = pd.DataFrame({'lat':[55.755],
