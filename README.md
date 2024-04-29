@@ -1,2 +1,0 @@
-# Weather-Forecasting
-Our weather forecasting website provides up-to-date and accurate weather information for locations worldwide. Whether you're planning a weekend getaway, preparing for your daily commute, or simply curious about the weather in your area, our website offers detailed forecasts, including temperature, humidity, wind speed, and precipitation chances. With easy-to-read charts and maps, you can quickly understand the weather conditions for the upcoming days. Stay informed and prepared with our reliable weather forecasts."
