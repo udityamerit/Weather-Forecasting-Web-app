@@ -128,9 +128,9 @@ elif city == 'tokyo':
 
 elif city == 'london':
     st.header(" 2 Week Extended forecasting of weather 👇", divider='rainbow')
-    st.image('london, uk, england.PNG',width= 1400)
-    df2 = pd.DataFrame({'lat':[51.51279],
-                        'lon':[-0.09184]})
+    st.image('london.PNG',width= 1400)
+    df2 = pd.DataFrame({'lat':[51.51],
+                        'lon':[-0.1284]})
     st.map(df2, size=200, color='#FF5733')
     data = pd.DataFrame(
         np.random.randn(19,3),
