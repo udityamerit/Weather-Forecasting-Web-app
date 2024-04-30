@@ -11,8 +11,8 @@ import datetime
 
 # Set page configuration
 st.set_page_config(
-    page_title="Weather Forcasting Dasboard",
-    page_icon=":cloud:", 
+    page_title="Weather Forcasting Dashboard",
+    page_icon="⛅", 
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -63,10 +63,10 @@ def get_weather(city):
     col1.subheader("Pressure in atm 🕣")
     col2.subheader(pressure)
 
-    col1.subheader("Wind speed in m/s🍃🍂")
+    col1.subheader("Wind speed in m/s 💨 ")
     col2.subheader(windspeed)
 
-    col1.subheader("Wind degree 🍃🍂")
+    col1.subheader("Wind degree 🧭")
     col2.subheader(wind_degree)
 
     col1.subheader("Sunrise 🌅")
