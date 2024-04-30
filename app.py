@@ -1,12 +1,9 @@
 import requests
-import math
 import json
-import sys
 import streamlit as st
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from PIL import Image
+
 
 # if you want to  create a cell like jupyter notbook then type   the ( # %% ) for the cell '''
 
@@ -22,21 +19,6 @@ st.set_page_config(
 df = pd.read_csv('Weather forecast data 1.csv')
 df1 = pd.read_csv('Weather forecast data set 2.csv')
 
-
-# st.header('Data set 1:')
-# st.dataframe(df)
-# st.header('Data set 2:')
-# st.dataframe(df1)
-
-# Get the particular data form the specific countery and city 
-
-# x = list(df['name'])
-# a = x[0:10]
-# st.write(a)
-
-# y = list(df['temp'])
-# b = y[0:10]
-# st.write(b)
 
 def get_weather(city):
     api_key = "3f4f458fc6d5cb3440d24074d29f7e82"
@@ -231,6 +213,4 @@ elif city == 'moscow':
     df2 = pd.DataFrame({'lat':[55.755],
                         'lon':[37.617]})
     st.map(df2, size=200, color='#F50C0C')
-    
 
-   
