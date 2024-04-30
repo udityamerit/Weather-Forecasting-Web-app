@@ -12,7 +12,7 @@ import datetime
 # Set page configuration
 st.set_page_config(
     page_title="Weather Forcasting Dasboard",
-    page_icon=":cloud:",
+    page_icon=":cloud:", 
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -48,21 +48,22 @@ def get_weather(city):
     
     # Convert temperature from Kelvin to Celsius
     temperature = round(temperature - 273.15, 2)
+    pressure = round(pressure/1000, 2)
     
     # Print the weather forecast
     st.header(f"Weather in {city}: {weather_description}",divider='rainbow')
 
     col1, col2 = st.columns([1,3])
-    col1.subheader("Temperature 🌡")
+    col1.subheader("Temperature in °C🌡")
     col2.subheader(temperature)
 
-    col1.subheader("Humidity 💧")
+    col1.subheader("Humidity in % 💧")
     col2.subheader(humidity)
 
-    col1.subheader("Pressure 🕣")
+    col1.subheader("Pressure in atm 🕣")
     col2.subheader(pressure)
 
-    col1.subheader("Wind speed 🍃🍂")
+    col1.subheader("Wind speed in m/s🍃🍂")
     col2.subheader(windspeed)
 
     col1.subheader("Wind degree 🍃🍂")
@@ -112,6 +113,8 @@ def get_5days_weather(city):
     weather_df = weather_df[['Given_City', 'Fetched City', 'Country', 'Population (in Millions)', 'Date', 'Temperature', 'Humidity', 'Pressure', 'Weather Description', 'Wind Speed', 'Wind Degree']]
     st.header("5 Days Weather Forecast", divider='rainbow')
     st.write(weather_df)
+    st.subheader("Ploting the bar graph of variation in Temperature")
+    st.bar_chart(weather_df[['Temperature']])
 
 # Add the heading of the Project
 st.header(":cloud: Welcome to the Weather Forecasting :sunny:", divider='rainbow')
