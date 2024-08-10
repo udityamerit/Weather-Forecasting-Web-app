@@ -121,5 +121,10 @@ if st.button("Get Weather Update") and city:
     weather_df = display_5days_weather(city)
     
     # Display the Pygwalker explorer outside the function to retain state
-    pyg_app = StreamlitRenderer(weather_df)
-    pyg_app.explorer()
+
+uploaded_file =  st.file_uploader("Your csv data ")
+
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    pyg_aap = StreamlitRenderer(df)
+    pyg_aap.explorer()
