@@ -19,28 +19,20 @@ headers = {
     "authorization": st.secrets["auth_var"],
     "content-type":"application/json"
 }
-@st.cache_data
-def get_weather_data(city):
+def get_weather(city):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={headers}"
-    response = requests.get(url)
-    response.raise_for_status()
-    data = json.loads(response.text)
-    return data
-
-@st.cache_data
-def get_5days_weather_data(city):
-    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={headers}"
-    response = requests.get(url)
-    response.raise_for_status()
-    data = json.loads(response.text)
-    return data
-
-def display_weather(city):
-    data = get_weather_data(city)
-    if data['cod'] != 200:
-        st.warning(f"Error: {data['message']}!!! " + "Please enter a valid city name")
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for any HTTP errors
+        data = json.loads(response.text)
+        if data['cod'] != 200:
+            st.warning(f"Error: {data['message']}!!! " + "Please enter a valid city name")
+            return
+        
+    except Exception as e:
+        st.write(f"An error occurred: {e}")
         return
-    
+        
     # Extract relevant weather information
     weather_description = data['weather'][0]['description']
     temperature = data['main']['temp']
@@ -56,7 +48,7 @@ def display_weather(city):
     pressure = round(pressure/1000, 2)
     
     # Print the weather forecast
-    st.header(f"Weather in {city}: {weather_description}", divider='rainbow')
+    st.header(f"Weather in {city}: {weather_description}",divider='rainbow')
     col1, col2 = st.columns([1,3])
     col1.subheader("Temperature in °C🌡")
     col2.subheader(temperature)
@@ -72,9 +64,20 @@ def display_weather(city):
     col2.subheader(datetime.datetime.fromtimestamp(sunrise).strftime('%Y-%m-%d %H:%M:%S'))
     col1.subheader("Sunset 🌇")
     col2.subheader(datetime.datetime.fromtimestamp(sunset).strftime('%Y-%m-%d %H:%M:%S'))
-
-def display_5days_weather(city):
-    data = get_5days_weather_data(city)
+def get_5days_weather(city):
+    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={headers}"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for any HTTP errors
+        data = json.loads(response.text)
+        # if data['cod'] != 200:
+        #     st.warning(f"Error: {data['message']}!!! " + "Please enter a valid city name")
+        #     return
+    except Exception as e:
+        st.write(f"An error occurred: {e}")
+        return
+    
+    # Extract relevant weather information
     weather = data['list']
     weather_data = []
     
@@ -87,38 +90,23 @@ def display_5days_weather(city):
         wind_speed = daily['wind']['speed']
         wind_degree = daily['wind']['deg']
         weather_data.append([date, temp, humidity, pressure, weather_description, wind_speed, wind_degree])
-
     weather_df = pd.DataFrame(weather_data, columns=['Date', 'Temperature', 'Humidity', 'Pressure', 'Weather Description', 'Wind Speed', 'Wind Degree'])
     weather_df['Given_City'] = city.title()
     weather_df['Fetched City'] = data['city']['name']
     weather_df['Country'] = data['city']['country']
     weather_df['Population (in Millions)'] = data['city']['population']/1e6
     weather_df = weather_df[['Given_City', 'Fetched City', 'Country', 'Population (in Millions)', 'Date', 'Temperature', 'Humidity', 'Pressure', 'Weather Description', 'Wind Speed', 'Wind Degree']]
-    
     st.header("5 Days Weather Forecast", divider='rainbow')
     st.write(weather_df)
-    file_path = 'weather.csv'
-    weather_df.to_csv(file_path, index=False)
-    
-    st.subheader("Plotting the bar graph of variation in Temperature")
-    st.bar_chart(weather_df[['Temperature']], color='#ffaa0088')
-    
-    return weather_df
-
+    st.subheader("Ploting the bar graph of variation in Temperature")
+    st.bar_chart(weather_df[['Temperature']])
 # Add the heading of the Project
 st.header(":cloud: Welcome to the Weather Forecasting :sunny:", divider='rainbow')
-
-# Use the absolute path of the image file
-# image_path = os.path.abspath('./images/weather_forecast.jpg')
+# Add the image in the project
 st.image('./images/weather forecast.jpg', use_column_width = True)
 st.subheader("Enter the City/State/Country Name")
-
-
 city = st.text_input("Enter City Name", "Bhopal")
-
 # Add the button to the project
 if st.button("Get Weather Update") and city:
-    display_weather(city)
-    weather_df = display_5days_weather(city)
-    
-
+    get_weather(city)
+    get_5days_weather(city)
