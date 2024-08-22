@@ -16,8 +16,12 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-api_key = "your api key"
+# api_key = "your api key"
 
+headers = {
+    "authorization": st.secrets["auth_var"],
+    "content-type":"application/json"
+}
 @st.cache_data
 def get_weather_data(city):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
