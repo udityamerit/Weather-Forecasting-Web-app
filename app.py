@@ -24,7 +24,7 @@ headers = {
 }
 @st.cache_data
 def get_weather_data(city):
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={headers}"
     response = requests.get(url)
     response.raise_for_status()
     data = json.loads(response.text)
@@ -32,7 +32,7 @@ def get_weather_data(city):
 
 @st.cache_data
 def get_5days_weather_data(city):
-    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}"
+    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={headers}"
     response = requests.get(url)
     response.raise_for_status()
     data = json.loads(response.text)
