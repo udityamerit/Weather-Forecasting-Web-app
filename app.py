@@ -12,15 +12,15 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
+api_key = "3f4f458fc6d5cb3440d24074d29f7e82"
 # api_key = "your api key"
 
-headers = {
-    "authorization": st.secrets["auth_var"],
-    "content-type":"application/json"
-}
+# headers = {
+#     "authorization": st.secrets["auth_var"],
+#     "content-type":"application/json"
+# }
 def get_weather(city):
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={headers}"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for any HTTP errors
@@ -65,7 +65,7 @@ def get_weather(city):
     col1.subheader("Sunset 🌇")
     col2.subheader(datetime.datetime.fromtimestamp(sunset).strftime('%Y-%m-%d %H:%M:%S'))
 def get_5days_weather(city):
-    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={headers}"
+    url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}"
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for any HTTP errors
@@ -99,7 +99,7 @@ def get_5days_weather(city):
     st.header("5 Days Weather Forecast", divider='rainbow')
     st.write(weather_df)
     st.subheader("Ploting the bar graph of variation in Temperature")
-    st.bar_chart(weather_df[['Temperature']])
+    st.bar_chart(weather_df[['Temperature']],color="#ffA500")
 # Add the heading of the Project
 st.header(":cloud: Welcome to the Weather Forecasting :sunny:", divider='rainbow')
 # Add the image in the project
