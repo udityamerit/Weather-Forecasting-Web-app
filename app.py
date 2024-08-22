@@ -3,6 +3,8 @@ import json
 import streamlit as st
 import pandas as pd
 import datetime
+import matplotlib.pyplot as plt
+
 
 
 # Set page configuration
@@ -13,8 +15,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-
-api_key = st.secrets["api_keys"]["openweather_api_key"]
+api_key = '3f4f458fc6d5cb3440d24074d29f7e82'
+# api_key = st.secrets["api_keys"]["openweather_api_key"]
 
 def get_weather(city):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}"
@@ -95,8 +97,39 @@ def get_5days_weather(city):
     weather_df = weather_df[['Given_City', 'Fetched City', 'Country', 'Population (in Millions)', 'Date', 'Temperature', 'Humidity', 'Pressure', 'Weather Description', 'Wind Speed', 'Wind Degree']]
     st.header("5 Days Weather Forecast", divider='rainbow')
     st.write(weather_df)
-    st.subheader("Ploting the bar graph of variation in Temperature")
-    st.bar_chart(weather_df[['Temperature']],color="#ffA500")
+
+    # Plotting temperature
+    st.subheader("Temperature Variation")
+    fig1, ax1 = plt.subplots()
+    ax1.plot(weather_df['Temperature'],  color='#FA5F55', label='Temperature (°C)')
+    ax1.set_title('Temperature Variation Over 5 Days')
+    # ax1.set_xlabel('Date')
+    plt.xticks(rotation = 90)
+    ax1.set_ylabel('Temperature (°C)')
+    ax1.legend()
+    st.pyplot(fig1)
+
+    # Plotting humidity
+    st.subheader("Humidity Variation")
+    fig2, ax2 = plt.subplots()
+    ax2.bar(weather_df['Date'].head(15), weather_df['Humidity'].head(15), color='orange', label='Humidity (%)')
+    ax2.set_title('Humidity Variation')
+    ax2.set_xlabel('Date')
+    plt.xticks(rotation = 90)
+    ax2.set_ylabel('Humidity (%)')
+    ax2.legend()
+    st.pyplot(fig2)
+
+    # Plotting wind speed
+    st.subheader("Wind Speed Variation")
+    fig3, ax3 = plt.subplots()
+    ax3.plot(weather_df['Wind Speed'], color='green', label='Wind Speed (m/s)')
+    ax3.set_title('Wind Speed Variation Over 5 Days')
+    # ax3.set_xlabel('Date')
+    ax3.set_ylabel('Wind Speed (m/s)')
+    ax3.legend()
+    st.pyplot(fig3)
+
 # Add the heading of the Project
 st.header(":cloud: Welcome to the Weather Forecasting :sunny:", divider='rainbow')
 # Add the image in the project
