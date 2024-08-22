@@ -2,11 +2,8 @@ import requests
 import json
 import streamlit as st
 import pandas as pd
-import numpy as np
-import pygwalker as pyg
 import datetime
-from pygwalker.api.streamlit import StreamlitRenderer
-import os
+
 
 # Set page configuration
 st.set_page_config(
