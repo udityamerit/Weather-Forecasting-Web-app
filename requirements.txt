@@ -1,2 +1,11 @@
-matplotlib
-pygwalker
+streamlit
+requests
+pandas
+datetime
+numpy
+plotly
+folium
+streamlit-folium
+streamlit-lottie
+plotly-express
+plotly-graph-objects
