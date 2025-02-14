@@ -14,7 +14,7 @@ st.set_page_config(
 )
 
 
-# api_key = st.secrets["api_keys"]["openweather_api_key"]
+api_key = st.secrets["api_keys"]["openweather_api_key"]
 
 
 def get_weather(city):
