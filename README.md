@@ -48,6 +48,15 @@ streamlit run weather_app.py
 2. **Main Function**: `main()` handles the app's main logic, displaying the title, text input for city name, and a button to fetch weather data.
 3. **API Call**: `get_weather()` function makes a GET request to the weather API with the provided city name and API key. It returns the weather data in JSON format if the request is successful.
 4. **Displaying Data**: `display_weather()` function takes the JSON response and extracts relevant information (temperature, humidity, etc.), displaying it in a readable format using Streamlit.
+### App looks like:
+![image](https://github.com/user-attachments/assets/9ca3f10d-30e4-4df3-83b6-3d4bbf2741f8)
+![image](https://github.com/user-attachments/assets/b3ebbb2d-620c-4b2f-86dd-2716e51bcc35)
+![image](https://github.com/user-attachments/assets/48fbf31a-fec7-4098-8178-17adb57e8255)
+![image](https://github.com/user-attachments/assets/0abb98d2-f69e-4f37-9974-d37f9849228c)
+![image](https://github.com/user-attachments/assets/d5ecfa56-62fc-4a1f-aedd-cf49d56d69e9)
+![image](https://github.com/user-attachments/assets/1d20b809-eab0-4ae8-92b7-71edff2b6b3f)
+
+
 
 ### Conclusion
 By following these steps, you will have a functional weather forecasting web app using Streamlit. This app can be further enhanced by adding features like a 5-day forecast, charts for visualizing weather data, and user authentication for personalizing the experience.
