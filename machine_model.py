@@ -9,6 +9,11 @@ import folium
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 from streamlit_lottie import st_lottie
+import base64
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.optimizers import Adam
 
 # Set page configuration with custom theme
 st.set_page_config(
@@ -74,7 +79,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 API_KEY = "3f4f458fc6d5cb3440d24074d29f7e82"
 
 # Custom color schemes for different weather conditions
@@ -98,7 +102,6 @@ def load_lottie_url(weather_condition):
         'Snow': "https://assets4.lottiefiles.com/packages/lf20_5i5k8k2f.json",
         'Thunderstorm': "https://assets3.lottiefiles.com/packages/lf20_bb9qzg9h.json"
     }
-    
     url = animation_urls.get(weather_condition, animation_urls['Clear'])
     try:
         r = requests.get(url)
@@ -126,38 +129,58 @@ def process_forecast_data(forecast_data):
 
 def create_heatmap(lat, lon, temp):
     """Create a heatmap showing temperature for the entered city."""
-    # Create a base map centered on the entered city
     m = folium.Map(location=[lat, lon], zoom_start=10, tiles='CartoDB positron')
-    
-    # Prepare data for the heatmap: [lat, lon, temperature]
     heat_data = [[lat, lon, temp]]
-    
-    # Add heatmap layer
     HeatMap(heat_data, name="Temperature Heatmap", min_opacity=0.5, max_zoom=18).add_to(m)
-    
-    # Add a marker for the city
     folium.Marker(
         location=[lat, lon],
         popup=f"Temperature: {temp}°C",
         icon=folium.Icon(color='blue')
     ).add_to(m)
-    
-    # Add layer control
     folium.LayerControl().add_to(m)
+    return m
+
+def create_city_area_map(lat, lon, city_name):
+    """Create a map showing the city's approximate area."""
+    m = folium.Map(location=[lat, lon], zoom_start=10, tiles='CartoDB positron')
     
+    # Approximate city area with a simple polygon (square around center)
+    # This is a simplified approach; real city boundaries would require GeoJSON data
+    delta = 0.05  # Approx 5-10 km radius depending on city size
+    city_boundary = [
+        [lat - delta, lon - delta],
+        [lat - delta, lon + delta],
+        [lat + delta, lon + delta],
+        [lat + delta, lon - delta]
+    ]
+    
+    folium.Polygon(
+        locations=city_boundary,
+        color='blue',
+        weight=2,
+        fill=True,
+        fill_color='blue',
+        fill_opacity=0.2,
+        popup=f"{city_name} Area"
+    ).add_to(m)
+    
+    folium.Marker(
+        location=[lat, lon],
+        popup=city_name,
+        icon=folium.Icon(color='blue')
+    ).add_to(m)
+    
+    folium.LayerControl().add_to(m)
     return m
 
 def get_weather_data(city):
     try:
         current_url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
         forecast_url = f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY}&units=metric"
-        
         current_response = requests.get(current_url)
         forecast_response = requests.get(forecast_url)
-        
         current_response.raise_for_status()
         forecast_response.raise_for_status()
-        
         return current_response.json(), forecast_response.json()
     except requests.exceptions.RequestException as e:
         st.error(f"🌧️ Error fetching weather data: {str(e)}")
@@ -166,7 +189,6 @@ def get_weather_data(city):
 def create_colorful_metric(label, value, delta=None, color_scheme=None):
     if color_scheme is None:
         color_scheme = ['#FF69B4', '#DA70D6']
-    
     metric_html = f"""
         <div class="metric-card" style="background: linear-gradient(45deg, {color_scheme[0]}, {color_scheme[1]});">
             <h3 style="color: white; margin: 0;">{label}</h3>
@@ -175,6 +197,81 @@ def create_colorful_metric(label, value, delta=None, color_scheme=None):
         </div>
     """
     return st.markdown(metric_html, unsafe_allow_html=True)
+
+def get_csv_download_link(df, filename="weather_forecast.csv"):
+    """Generate a link to download the DataFrame as a CSV file."""
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download {filename}</a>'
+    return href
+
+def prepare_lstm_data(df, features=['temp', 'humidity', 'wind_speed', 'pressure'], look_back=8):
+    """Prepare data for LSTM model with multiple features."""
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    dataset = scaler.fit_transform(df[features].values)
+    
+    X, y = [], []
+    for i in range(len(dataset) - look_back):
+        X.append(dataset[i:(i + look_back), :])
+        y.append(dataset[i + look_back, :])
+    
+    X = np.array(X)
+    y = np.array(y)
+    
+    return X, y, scaler
+
+def create_lstm_model(look_back=8, n_features=4):
+    """Create and compile LSTM model for multiple features."""
+    model = Sequential()
+    model.add(LSTM(50, return_sequences=True, input_shape=(look_back, n_features)))
+    model.add(LSTM(50))
+    model.add(Dense(n_features))
+    model.compile(optimizer=Adam(learning_rate=0.001), loss='mse')
+    return model
+
+def predict_weather_attributes(df, look_back=8, forecast_steps=40):
+    """Predict multiple weather attributes for the next 5 days."""
+    try:
+        features = ['temp', 'humidity', 'wind_speed', 'pressure']
+        X, y, scaler = prepare_lstm_data(df, features, look_back)
+        
+        # Train model
+        model = create_lstm_model(look_back, len(features))
+        model.fit(X, y, epochs=50, batch_size=1, verbose=0)
+        
+        # Prepare last sequence for prediction
+        last_sequence = df[features].values[-look_back:]
+        last_sequence = scaler.transform(last_sequence)
+        last_sequence = np.reshape(last_sequence, (1, look_back, len(features)))
+        
+        # Predict next 40 time steps (5 days at 3-hour intervals)
+        predictions = []
+        current_sequence = last_sequence.copy()
+        
+        for _ in range(forecast_steps):
+            pred = model.predict(current_sequence, verbose=0)
+            predictions.append(pred[0])
+            current_sequence = np.roll(current_sequence, -1, axis=1)
+            current_sequence[0, -1, :] = pred[0]
+        
+        # Inverse transform predictions
+        predictions = scaler.inverse_transform(np.array(predictions))
+        
+        # Create prediction DataFrame
+        last_datetime = df['datetime'].iloc[-1]
+        prediction_times = [last_datetime + datetime.timedelta(hours=3*(i+1)) for i in range(forecast_steps)]
+        pred_df = pd.DataFrame({
+            'datetime': prediction_times,
+            'temp': predictions[:, 0],
+            'humidity': predictions[:, 1],
+            'wind_speed': predictions[:, 2],
+            'pressure': predictions[:, 3]
+        })
+        
+        return pred_df
+    except Exception as e:
+        st.warning(f"⚠️ Could not generate ML predictions: {str(e)}")
+        return None
 
 def main():
     st.sidebar.title("🎨 Dashboard Settings")
@@ -278,20 +375,81 @@ def main():
             fig_wind = px.bar(df, x='datetime', y='wind_speed', title='Wind Speed Distribution', color_discrete_sequence=chart_colors[chart_theme])
             st.plotly_chart(fig_wind, use_container_width=True)
             
-            # Pressure Trends (Scatter Plot)
-            st.subheader("📊 Pressure Trends")
-            fig_pressure = px.scatter(df, x='datetime', y='pressure', title='Pressure Trends', color_discrete_sequence=chart_colors[chart_theme])
-            st.plotly_chart(fig_pressure, use_container_width=True)
+            # 3D Pressure Trends
+            st.subheader("🌍 3D Pressure Trends")
+            fig_pressure_3d = go.Figure(
+                data=[go.Scatter3d(
+                    x=df['datetime'], 
+                    y=df['pressure'], 
+                    z=df['wind_speed'],
+                    mode='markers',
+                    marker=dict(
+                        size=4,
+                        color=df['pressure'],
+                        colorscale='viridis',
+                        opacity=1
+                    )
+                )]
+            )
+            fig_pressure_3d.update_layout(
+                title="3D Pressure Trends",
+                scene=dict(
+                    xaxis_title="Datetime",
+                    yaxis_title="Pressure (hPa)",
+                    zaxis_title="Wind Speed (m/s)"
+                )
+            )
+            st.plotly_chart(fig_pressure_3d, use_container_width=True)
             
-             # Heatmap for the entered city
+            # ML Predictions for all attributes
+            st.subheader("🤖 ML Weather Predictions (Next 5 Days)")
+            pred_df = predict_weather_attributes(df)
+            if pred_df is not None:
+                # Plot predictions for each attribute
+                for attr, title, y_label in [
+                    ('temp', 'Temperature Prediction', 'Temperature (°C)'),
+                    ('humidity', 'Humidity Prediction', 'Humidity (%)'),
+                    ('wind_speed', 'Wind Speed Prediction', 'Wind Speed (m/s)'),
+                    ('pressure', 'Pressure Prediction', 'Pressure (hPa)')
+                ]:
+                    fig_pred = go.Figure()
+                    fig_pred.add_trace(go.Scatter(
+                        x=df['datetime'],
+                        y=df[attr],
+                        mode='lines',
+                        name='Historical',
+                        line=dict(color=chart_colors[chart_theme][0])
+                    ))
+                    fig_pred.add_trace(go.Scatter(
+                        x=pred_df['datetime'],
+                        y=pred_df[attr],
+                        mode='lines+markers',
+                        name='Predicted',
+                        line=dict(color=chart_colors[chart_theme][1], dash='dash')
+                    ))
+                    fig_pred.update_layout(
+                        title=f'LSTM {title}',
+                        xaxis_title='DateTime',
+                        yaxis_title=y_label,
+                        showlegend=True
+                    )
+                    st.plotly_chart(fig_pred, use_container_width=True)
+                
+                # Download ML Predictions CSV
+                st.markdown(get_csv_download_link(pred_df, "ml_weather_predictions.csv"), unsafe_allow_html=True)
+            
+            # Download Historical Weather Data CSV
+            st.subheader("📥 Download Historical Weather Data")
+            st.markdown(get_csv_download_link(df, "historical_weather_forecast.csv"), unsafe_allow_html=True)
+            
+            # Heatmap for the entered city
             st.subheader("🔥 Temperature Heatmap for the Entered City")
             lat = current_weather['coord']['lat']
             lon = current_weather['coord']['lon']
             temp = current_weather['main']['temp']
             heatmap = create_heatmap(lat, lon, temp)
             folium_static(heatmap, width=1200, height=600)
-            
-               
+    
 
 if __name__ == "__main__":
     main()
