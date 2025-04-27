@@ -8,4 +8,3 @@ folium
 streamlit-folium
 streamlit-lottie
 plotly-express
-plotly-graph-objects
