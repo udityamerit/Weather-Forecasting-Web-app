@@ -17,7 +17,7 @@ from tensorflow.keras.optimizers import Adam
 
 # Set page configuration with custom theme
 st.set_page_config(
-    page_title="Vibrant Weather Analytics Dashboard",
+    page_title="ATMOSVISION A REAL-TIME WEATHER ANALYTICS AND ML PREDICTIONS ",
     page_icon="🌈",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -306,7 +306,7 @@ def main():
         "Sunset": px.colors.sequential.Sunset
     }
     
-    st.title("🌈 Vibrant Weather Analytics Dashboard")
+    st.title("🌈 ATMOSVISION A REAL-TIME WEATHER ANALYTICS AND ML PREDICTIONS ")
     
     if city:
         current_weather, forecast_data = get_weather_data(city)
@@ -384,7 +384,7 @@ def main():
                     z=df['wind_speed'],
                     mode='markers',
                     marker=dict(
-                        size=4,
+                        size=7,
                         color=df['pressure'],
                         colorscale='viridis',
                         opacity=1
