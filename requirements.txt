@@ -1,7 +1,7 @@
 streamlit
 requests
 pandas
-sklearn
+scikit-learn
 datetime
 numpy
 plotly

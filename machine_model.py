@@ -10,8 +10,6 @@ from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 from streamlit_lottie import st_lottie
 import base64
-import sklearn
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
