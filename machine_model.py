@@ -18,7 +18,7 @@ from tensorflow.keras.optimizers import Adam
 # Set page configuration with custom theme
 st.set_page_config(
     page_title="ATMOSVISION A REAL-TIME WEATHER ANALYTICS AND ML PREDICTIONS ",
-    page_icon="🌈",
+    page_icon="🌤️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -306,7 +306,7 @@ def main():
         "Sunset": px.colors.sequential.Sunset
     }
     
-    st.title("🌈 ATMOSVISION A REAL-TIME WEATHER ANALYTICS AND ML PREDICTIONS ")
+    st.title("🌤️ ATMOSVISION A REAL-TIME WEATHER ANALYTICS AND ML PREDICTIONS ")
     
     if city:
         current_weather, forecast_data = get_weather_data(city)
