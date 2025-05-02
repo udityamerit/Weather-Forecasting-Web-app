@@ -293,7 +293,7 @@ def main():
     else:
         city = st.sidebar.text_input("Enter city name:", "")
     
-    temp_unit = st.sidebar.selectbox("🌡️ Temperature Unit:", ["Celsius", "Fahrenheit"])
+    temp_unit = st.sidebar.selectbox("🌡️ Temperature Unit:", ["Celsius"])
     chart_theme = st.sidebar.selectbox("🎨 Chart Theme:", [
         "Vibrant", "Pastel", "Neon", "Ocean", "Sunset"
     ])
