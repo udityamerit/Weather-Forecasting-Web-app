@@ -92,7 +92,7 @@ WEATHER_COLORS = {
 }
 
 def get_weather_theme(weather_condition):
-    return WEATHER_COLORS.get(weather_condition, WEATHER_COLORS['Default'])
+    return WEATHER_COLORS.get(weather_condition, WEATHER_COLORS['Default']) 
 
 def load_lottie_url(weather_condition):
     animation_urls = {
@@ -273,6 +273,8 @@ def predict_weather_attributes(df, look_back=8, forecast_steps=40):
         st.warning(f"⚠️ Could not generate ML predictions: {str(e)}")
         return None
 
+
+
 def main():
     st.sidebar.title("🎨 Dashboard Settings")
     
@@ -441,7 +443,7 @@ def main():
             # Download Historical Weather Data CSV
             st.subheader("📥 Download Historical Weather Data")
             st.markdown(get_csv_download_link(df, "historical_weather_forecast.csv"), unsafe_allow_html=True)
-            
+             
             # Heatmap for the entered city
             st.subheader("🔥 Temperature Heatmap for the Entered City")
             lat = current_weather['coord']['lat']
