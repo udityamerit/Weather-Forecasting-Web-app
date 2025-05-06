@@ -10,3 +10,4 @@ streamlit-folium
 streamlit-lottie
 plotly-express
 tensorflow
+googlemaps

@@ -238,7 +238,7 @@ def setup_sidebar():
     
     # Background color customization
     st.sidebar.title("🎨 Customization")
-    bg_color = st.sidebar.color_picker("Choose background color:", "#f0f2f6")
+    bg_color = st.sidebar.color_picker("Choose background color:", "#0029FF")
     
     temp_unit = st.sidebar.selectbox("🌡️ Temperature Unit:", ["Celsius"])
     chart_theme = st.sidebar.selectbox("🎨 Chart Theme:", [
