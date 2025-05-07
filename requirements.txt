@@ -11,3 +11,4 @@ streamlit-lottie
 plotly-express
 tensorflow
 googlemaps
+deep_translator
