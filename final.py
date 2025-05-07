@@ -390,7 +390,7 @@ def setup_sidebar():
     
     # Background color customization
     st.sidebar.title("🎨 Customization")
-    bg_color = st.sidebar.color_picker("Choose background color:", "#0029FF")
+    bg_color = st.sidebar.color_picker("Choose background color:", "#000000")
     
     # Temperature unit and language options
     temp_unit = st.sidebar.selectbox("🌡️ Temperature Unit:", ["Celsius", "Fahrenheit"])
@@ -1084,8 +1084,6 @@ def data_export_page(df, historical_df, extended_df, language_code):
     st.markdown(get_csv_download_link(filter_df, f"filtered_{filter_dataset.lower().replace(' ', '_')}.csv"), 
                unsafe_allow_html=True)
 
-
-
 def main():
     # Setup sidebar and get configuration
     city, lat, lon, chart_theme, bg_color, temp_unit, lang_code = setup_sidebar()
@@ -1124,7 +1122,7 @@ def main():
                 extended_df = get_extended_forecast(current_weather['coord']['lat'], current_weather['coord']['lon'])
                 recommendations = generate_recommendations(df, current_weather)
                 
-                # Page navigation
+                # Page navigation - create a mapping that doesn't require reverse translation
                 pages = {
                     "Dashboard": dashboard_page,
                     "Weather Analytics": weather_analytics_page,
@@ -1138,15 +1136,34 @@ def main():
                     "Data Export": data_export_page
                 }
                 
+                # Create display names for the sidebar
                 if lang_code != 'en':
-                    translated_pages = {translate_text(key, lang_code): value for key, value in pages.items()}
-                    page = st.sidebar.selectbox(translate_text("Navigation", lang_code), list(translated_pages.keys()))
-                    page_func = pages[translate_text(page, lang_code, target_language='en')]
+                    page_names = [translate_text(name, lang_code) for name in pages.keys()]
                 else:
-                    page = st.sidebar.selectbox("Navigation", list(pages.keys()))
-                    page_func = pages[page]
+                    page_names = list(pages.keys())
+                
+                # Show the selectbox with translated names
+                page_name = st.sidebar.selectbox(
+                    translate_text("Navigation", lang_code) if lang_code != 'en' else "Navigation",
+                    page_names
+                )
+                
+                # Get the original English page name if we're in a different language
+                if lang_code != 'en':
+                    # Find the English key that corresponds to the translated page name
+                    page_key = None
+                    for eng_name, func in pages.items():
+                        if translate_text(eng_name, lang_code) == page_name:
+                            page_key = eng_name
+                            break
+                    if page_key is None:
+                        page_key = list(pages.keys())[0]  # Default to first page if translation fails
+                else:
+                    page_key = page_name
                 
                 # Call the selected page function
+                page_func = pages[page_key]
+                
                 if page_func == dashboard_page:
                     dashboard_page(current_weather, forecast_data, chart_theme, lang_code, recommendations)
                 elif page_func in [weather_analytics_page, temperature_forecast_page, humidity_wind_page]:
