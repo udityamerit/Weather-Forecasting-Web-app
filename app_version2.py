@@ -29,6 +29,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
 API_KEY = "3f4f458fc6d5cb3440d24074d29f7e82"
 
 # Custom color schemes for different weather conditions
